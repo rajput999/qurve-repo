@@ -1,0 +1,47 @@
+name: Build and Publish SDK
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    
+    - run: npm ci
+    - run: npm run build
+    
+    - name: Create single file repository
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        REPO_OWNER: rajput999
+        REPO_NAME: qurve-repo
+      run: |
+        mkdir -p single-file-repo
+        cp dist/qurve-sdk.js single-file-repo/
+        cd single-file-repo
+        
+        # Initialize git with full remote URL
+        git init
+        git config user.name "github-actions"
+        git config user.email "github-actions@github.com"
+        
+        # Add files
+        git branch -m main
+        git add .
+        git commit -m "Deploy qurve-sdk.js"
+        
+        # Push using full remote URL with token
+        git push -f https://x-access-token:${GITHUB_TOKEN}@github.com/${REPO_OWNER}/${REPO_NAME}.git main:gh-pages

@@ -14,7 +14,7 @@
         "@babel/preset-env": "^7.0.0",
         "babel-loader": "^8.0.0",
         "css-loader": "^7.1.2",
-        "dotenv-webpack": "^7.0.0",
+        "dotenv-webpack": "^7.1.1",
         "path-browserify": "^0.0.1",
         "style-loader": "^4.0.0",
         "webpack": "^5.0.0",
